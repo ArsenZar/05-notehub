@@ -29,7 +29,6 @@ export default function RandomUser() {
         setStatus("idle");
     }
 
-
     return (
         <>
             <button onClick={fetchUser}>Load users</button>
