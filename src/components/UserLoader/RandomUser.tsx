@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 type Status = "idle" | "loading" | "success" | "error";
@@ -11,40 +11,61 @@ interface User {
 export default function RandomUser() { 
 
     const [status, setStatus] = useState<Status>("idle");
-    const [users, setUsers] = useState<User[]>([]);
+    const [user, setUsers] = useState<User | null>(null);
+    const [id, setId] = useState<number | "">("");
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+        
+    useEffect(() => {
+        if (user) console.log(user);
+    }, [user]);
 
     async function fetchUser() {
+        if (id === "") {
+            setStatus("error");
+            setErrorMessage("Enter id");
+            return;
+        }
+        if (id <= 0) {
+            setStatus("error");
+            setErrorMessage("Enter id > 0");
+            return;
+        }
+        
         try {
             setStatus("loading");
-            const response = await axios.get<User[]>('https://jsonplaceholder.typicode.com/users');
+            const response = await axios.get<User>(`https://jsonplaceholder.typicode.com/users/${id}`);
             setUsers(response.data);
             setStatus("success");
+            setErrorMessage(null);
         } catch {
-            setStatus("error")
-        } 
+            setStatus("error");
+            setErrorMessage("User not found");
+        }
     };
 
     function reset() { 
-        setUsers([]);
+        setUsers(null);
         setStatus("idle");
+        setId("");
+        setErrorMessage(null);
+    }
+
+    function changeInput(e: React.ChangeEvent<HTMLInputElement>) { 
+        const value = e.target.value;
+        setId(value === "" ? "" : Number(value));
     }
 
     return (
         <>
-            <button onClick={fetchUser}>Load users</button>
+            <input type="number" value={id} onChange={changeInput}/>
+            <button onClick={fetchUser} disabled={ status === "loading" || id === "" }>Load users</button>
             <button onClick={reset}>Reset</button>
             
             {status === "idle" && <p>Load users to start</p>}
             {status === "loading" && <p>Loading...</p>}
-            {status === "error" && <p>Error...</p>}
-            {status === "success" && 
-                <ul>
-                    {
-                        users.map((user) => (
-                            <li key={user.id}>{user.name}</li>
-                        ))
-                    }
-                </ul>
+            {status === "error" && <p>{errorMessage}</p>}
+            {status === "success" && user &&
+                <p> { user.name } </p>        
             }
         </>
     );
