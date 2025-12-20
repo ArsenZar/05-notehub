@@ -6,40 +6,37 @@ import axios from "axios";
 import UserList from './components/UserLoader/UserList';
 import UserDetails from './components/UserLoader/UserDetails';
 import type { User } from './types/user';
-
-type Status = "idle" | "loading" | "success" | "error";
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 export default function App() {
-  const [status, setStatus] = useState<Status>("idle");
-  const [users, setUsers] = useState<User[]>([]);
+  // const [status, setStatus] = useState<Status>("idle");
+  // const [users, setUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (selectedUser) console.log(selectedUser.id);
-  }, [selectedUser]);
+  const queryClient = useQueryClient();
+  // const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const selectedUserId = selectedUser?.id ?? null;
 
-  async function fetchUser() {
+  const { data, error, isError, isLoading, isSuccess, refetch } = useQuery({
+    queryKey: ['users'],
+    queryFn: fetchUsers,
+    enabled: false
+  });
 
-    try {
-      setStatus("loading");
-      const response = await axios.get<User[]>(`https://jsonplaceholder.typicode.com/users`);
-      setUsers(response.data);
-      setStatus("success");
-      setErrorMessage(null);
-    } catch {
-      setStatus("error");
-      setErrorMessage("User not found");
-    }
-  };
+  useEffect(() => {
+    if (selectedUser) console.log(selectedUser?.id);
+  }, [selectedUser]);
+
+  const users = data ?? [];
+
+  async function fetchUsers(){ 
+    const response = await axios.get<User[]>(`https://jsonplaceholder.typicode.com/users`);
+    return response.data;
+  }
 
   function reset() {
-    setUsers([]);
-    setStatus("idle");
-    setErrorMessage(null);
     setSelectedUser(null);
+    queryClient.removeQueries({ queryKey: ['users'] });
   }
 
   function toggleUser(user: User) {
@@ -50,21 +47,19 @@ export default function App() {
 
   return (
     <>
-      <button onClick={fetchUser} disabled={status === "loading"}>Load users</button>
+      <button onClick={() => refetch()} disabled={isLoading}>Load users</button>
       <button onClick={reset}>Reset</button>
-
-      {status === "idle" && <p>Load users to start</p>}
-      {status === "loading" && <p>Loading...</p>}
-      {status === "error" && <p>{errorMessage}</p>}
-      {status === "success" && 
+      { isError && `Error: ${error}`}
+      {isSuccess &&
         <ul>
           <UserList users={users} userId={selectedUserId} onSelect={toggleUser} />
         </ul>
       }
-      <UserDetails user={ selectedUser } /> 
+      
+      <UserDetails user={ selectedUser } />
+    
     </>
   );
-  
 }
 
 
