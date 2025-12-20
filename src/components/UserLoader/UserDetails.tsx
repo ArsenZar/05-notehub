@@ -1,4 +1,6 @@
 import type { User } from "../../types/user";
+import css from "./UserDetails.module.css"
+
 
 interface UserDetailsPrpos{
     user: User | null
@@ -7,7 +9,7 @@ interface UserDetailsPrpos{
 export default function UserDetails({ user }: UserDetailsPrpos) { 
 
     return (
-        <p>
+        <p className={ css.border }>
             {user ? user.email : "Select a user"}
         </p>
     )

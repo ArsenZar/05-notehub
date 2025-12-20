@@ -16,8 +16,10 @@ export default function App() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    if (selectedUser) console.log(selectedUser);
+    if (selectedUser) console.log(selectedUser.id);
   }, [selectedUser]);
+
+  const selectedUserId = selectedUser?.id ?? null;
 
   async function fetchUser() {
 
@@ -50,10 +52,10 @@ export default function App() {
       {status === "error" && <p>{errorMessage}</p>}
       {status === "success" && 
         <ul>
-          <UserList users={users} onSelect={setSelectedUser} />
+          <UserList users={users} userId={selectedUserId} onSelect={setSelectedUser} />
         </ul>
       }
-      {selectedUser && <UserDetails user={ selectedUser } /> }
+      <UserDetails user={ selectedUser } /> 
     </>
   );
   
