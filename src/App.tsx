@@ -42,6 +42,12 @@ export default function App() {
     setSelectedUser(null);
   }
 
+  function toggleUser(user: User) {
+    if (user.id === selectedUser?.id) {
+      setSelectedUser(null)
+    } else { setSelectedUser(user) }
+  }
+
   return (
     <>
       <button onClick={fetchUser} disabled={status === "loading"}>Load users</button>
@@ -52,7 +58,7 @@ export default function App() {
       {status === "error" && <p>{errorMessage}</p>}
       {status === "success" && 
         <ul>
-          <UserList users={users} userId={selectedUserId} onSelect={setSelectedUser} />
+          <UserList users={users} userId={selectedUserId} onSelect={toggleUser} />
         </ul>
       }
       <UserDetails user={ selectedUser } /> 
