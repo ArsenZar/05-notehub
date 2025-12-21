@@ -1,77 +1,36 @@
 
 import './App.css'
 // import UserLoader from './components/UserLoader/UserLoader'
-import React, { useEffect, useState } from "react";
 import axios from "axios";
-import UserList from './components/UserLoader/UserList';
-import UserDetails from './components/UserLoader/UserDetails';
-import type { User } from './types/user';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+// 1. Імпортуємо хук useMutation
+import { useMutation } from '@tanstack/react-query';
 
 export default function App() {
-  // const [status, setStatus] = useState<Status>("idle");
-  // const [users, setUsers] = useState<User[]>([]);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const queryClient = useQueryClient();
-  // const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  const selectedUserId = selectedUser?.id ?? null;
-
-  const { data, error, isError, isLoading, isSuccess, refetch } = useQuery({
-    queryKey: ['users'],
-    queryFn: fetchUsers,
-    enabled: false
+  // 2. Використовуємо хук
+  const mutation = useMutation({
+    mutationFn: async (newTodo) => {
+      const res = await axios.post('https://jsonplaceholder.typicode.com/todos', newTodo);
+      return res.data;
+    },
+    onSuccess: () => {
+      console.log("Todo added successfully");
+    }
   });
 
-  const { data: userDetails } = useQuery({
-    queryKey: ['user', selectedUserId],
-    queryFn: () => fetchUsersById(selectedUserId as number),
-    enabled: selectedUserId != null
-  });
-
-  useEffect(() => {
-    if (selectedUser) console.log(selectedUser?.id);
-  }, [selectedUser]);
-
-  const users = data ?? [];
-
-  async function fetchUsers(){ 
-    const response = await axios.get<User[]>(`https://jsonplaceholder.typicode.com/users`);
-    return response.data;
-  }
-
-  async function fetchUsersById(id: number) {
-    const response = await axios.get<User>(`https://jsonplaceholder.typicode.com/users/${id}`);
-    return response.data;
-  }
-
-  function reset() {
-    setSelectedUser(null);
-    queryClient.removeQueries({ queryKey: ['users'] });
-    queryClient.removeQueries({ queryKey: ['user'] });
-  }
-
-  function toggleUser(user: User) {
-    if (user.id === selectedUser?.id) {
-      setSelectedUser(null)
-    } else { setSelectedUser(user) }
-  }
+  const handleCreateTodo = () => {
+    // 3. Викликаємо mutate для того щоб виконати HTTP-запит
+    mutation.mutate({
+      title: "My new todo",
+      completed: false
+    })
+  };
 
   return (
     <>
-      <button onClick={() => refetch()} disabled={isLoading}>Load users</button>
-      <button onClick={reset}>Reset</button>
-      {isError && <p>Error: { (error as Error).message }</p>}
-      {isSuccess &&
-        <ul>
-          <UserList users={users} userId={selectedUserId} onSelect={toggleUser} />
-        </ul>
-      }
-      
-      <UserDetails user={userDetails ?? null} />
-    
+      <button onClick={handleCreateTodo}>Create Todo</button>
+      {mutation.isPending && <div>Adding todo...</div>}
+      {mutation.isError && <div>An error occurred</div>}
+      {mutation.isSuccess && <div>Todo added!</div>}
     </>
   );
 }
-
-
