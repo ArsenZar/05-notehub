@@ -21,6 +21,9 @@ export default function App() {
     },
     onSuccess: () => {
       console.log("Todo added successfully");
+    },
+    onError: () => {
+      console.log("error");
     }
   });
 
