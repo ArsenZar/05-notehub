@@ -5,11 +5,18 @@ import axios from "axios";
 // 1. Імпортуємо хук useMutation
 import { useMutation } from '@tanstack/react-query';
 
+type NewTodo = {
+  title: string;
+  completed: boolean;
+};
+
+type TodoResponse = NewTodo & { id: number };
+
 export default function App() {
   // 2. Використовуємо хук
-  const mutation = useMutation({
+  const mutation = useMutation<TodoResponse, Error, NewTodo>({
     mutationFn: async (newTodo) => {
-      const res = await axios.post('https://jsonplaceholder.typicode.com/todos', newTodo);
+      const res = await axios.post<TodoResponse>('https://jsonplaceholder.typicode.com/todos', newTodo);
       return res.data;
     },
     onSuccess: () => {
