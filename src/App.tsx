@@ -23,6 +23,12 @@ export default function App() {
     enabled: false
   });
 
+  const { data: userDetails } = useQuery({
+    queryKey: ['user', selectedUserId],
+    queryFn: () => fetchUsersById(selectedUserId as number),
+    enabled: selectedUserId != null
+  });
+
   useEffect(() => {
     if (selectedUser) console.log(selectedUser?.id);
   }, [selectedUser]);
@@ -34,9 +40,15 @@ export default function App() {
     return response.data;
   }
 
+  async function fetchUsersById(id: number) {
+    const response = await axios.get<User>(`https://jsonplaceholder.typicode.com/users/${id}`);
+    return response.data;
+  }
+
   function reset() {
     setSelectedUser(null);
     queryClient.removeQueries({ queryKey: ['users'] });
+    queryClient.removeQueries({ queryKey: ['user'] });
   }
 
   function toggleUser(user: User) {
@@ -49,14 +61,14 @@ export default function App() {
     <>
       <button onClick={() => refetch()} disabled={isLoading}>Load users</button>
       <button onClick={reset}>Reset</button>
-      { isError && `Error: ${error}`}
+      {isError && <p>Error: { (error as Error).message }</p>}
       {isSuccess &&
         <ul>
           <UserList users={users} userId={selectedUserId} onSelect={toggleUser} />
         </ul>
       }
       
-      <UserDetails user={ selectedUser } />
+      <UserDetails user={userDetails ?? null} />
     
     </>
   );
