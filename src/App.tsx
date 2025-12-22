@@ -1,17 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from 'react';
+import { useDebouncedCallback } from 'use-debounce';
 
-// full control value
 export default function App() {
-  const [inputValue, setInputValue] = useState("");
+  const [text, setText] = useState('hello');
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
-  };
+  const handleChange = useDebouncedCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => setText(event.target.value),
+    1000
+  );
+
+  useEffect(() => {
+    console.log(`Make HTTP request with: ${text}`);
+  }, [text]);
 
   return (
     <>
-      <input type="text" value={inputValue} onChange={handleChange} />
-      <p>{inputValue}</p>
+      <input type="text" defaultValue={text} onChange={handleChange} />
+      <p>Text value: {text}</p>
     </>
   );
 }
