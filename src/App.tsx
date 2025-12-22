@@ -14,13 +14,13 @@ type TodoResponse = { id: number } & NewTodo ;
 
 export default function App() {
 
-  // const fethchTodos = useQuery({
-  //   queryKey: ['todos'],
-  //   queryFn: async () => {
-  //     const res = await axios.get('https://jsonplaceholder.typicode.com/todos');
-  //     return res.data;
-  //   },
-  // });
+  const fethchTodos = useQuery({
+    queryKey: ['todos'],
+    queryFn: async () => {
+      const res = await axios.get('https://jsonplaceholder.typicode.com/todos');
+      return res.data;
+    },
+  });
 
   const queryClient = useQueryClient();
   
