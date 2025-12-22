@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+// full control value
 export default function App() {
   const [inputValue, setInputValue] = useState("");
 
