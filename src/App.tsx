@@ -60,10 +60,12 @@ export default function App() {
       {fethchTodos.isError && <p>Error...</p>}
 
       {fethchTodos.data && (
-        <pre>
-          { JSON.stringify(fethchTodos.data, null, 2)}
-        </pre>
-        
+        // <pre>
+        //   { JSON.stringify(fethchTodos.data, null, 2)}
+        // </pre>
+        fethchTodos.data.map((user: NewTodo) => (
+          <p>{ user.title}</p>
+        ))
       )}
     </>
   );
