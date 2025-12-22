@@ -3,16 +3,21 @@ import './App.css'
 // import UserLoader from './components/UserLoader/UserLoader'
 import axios from "axios";
 // 1. Імпортуємо хук useMutation
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 
 type NewTodo = {
   title: string;
   completed: boolean;
 };
 
-type TodoResponse = NewTodo & { id: number };
+type TodoResponse = { id: number } & NewTodo ;
 
 export default function App() {
+
+
+
+  const queryClient = useQueryClient();
+  
   // 2. Використовуємо хук
   const mutation = useMutation<TodoResponse, Error, NewTodo>({
     mutationFn: async (newTodo) => {
@@ -20,7 +25,7 @@ export default function App() {
       return res.data;
     },
     onSuccess: () => {
-      console.log("Todo added successfully");
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
     },
     onError: () => {
       console.log("error");
