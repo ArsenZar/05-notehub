@@ -31,7 +31,7 @@ export default function App() {
       return res.data;
     },
     onSuccess: (newTodo) => {
-      queryClient.setQueriesData(["todos"], (oldTodos: any[]) => { 
+      queryClient.setQueriesData(["todos"], (oldTodos: NewTodo[] & {id: number}) => { 
         return [...oldTodos, newTodo];
       });
 
@@ -63,8 +63,8 @@ export default function App() {
         // <pre>
         //   { JSON.stringify(fethchTodos.data, null, 2)}
         // </pre>
-        fethchTodos.data.map((user: NewTodo) => (
-          <p>{ user.title}</p>
+        fethchTodos.data?.map((user: NewTodo & {id: number}) => (
+          <p key={ user.id}>{ user.title}</p>
         ))
       )}
     </>
