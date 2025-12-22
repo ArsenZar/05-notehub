@@ -14,7 +14,13 @@ type TodoResponse = { id: number } & NewTodo ;
 
 export default function App() {
 
-
+  const fethchTodos = useQuery({
+    queryKey: ['todos'],
+    queryFn: async () => {
+      const res = await axios.get('https://jsonplaceholder.typicode.com/todos');
+      return res.data;
+    },
+  });
 
   const queryClient = useQueryClient();
   
@@ -24,8 +30,11 @@ export default function App() {
       const res = await axios.post<TodoResponse>('https://jsonplaceholder.typicode.com/todos', newTodo);
       return res.data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["todos"] });
+    onSuccess: (newTodo) => {
+      queryClient.setQueriesData(["todos"], (oldTodos: any[]) => { 
+        return [...oldTodos, newTodo];
+      });
+
     },
     onError: () => {
       console.log("error");
@@ -46,6 +55,16 @@ export default function App() {
       {mutation.isPending && <div>Adding todo...</div>}
       {mutation.isError && <div>An error occurred</div>}
       {mutation.isSuccess && <div>Todo added!</div>}
+
+      {fethchTodos.isLoading && <p>Loading...</p>}
+      {fethchTodos.isError && <p>Error...</p>}
+
+      {fethchTodos.data && (
+        <pre>
+          { JSON.stringify(fethchTodos.data, null, 2)}
+        </pre>
+        
+      )}
     </>
   );
 }
