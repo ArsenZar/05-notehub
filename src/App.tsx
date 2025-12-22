@@ -31,10 +31,9 @@ export default function App() {
       return res.data;
     },
     onSuccess: (newTodo) => {
-      queryClient.setQueriesData(["todos"], (oldTodos: NewTodo[] & {id: number}) => { 
-        return [...oldTodos, newTodo];
-      });
-
+      // queryClient.setQueriesData(["todos"], (oldTodos: NewTodo[] & {id: number}) => { 
+      //   return [...oldTodos, newTodo];
+      // });
     },
     onError: () => {
       console.log("error");
@@ -63,8 +62,8 @@ export default function App() {
         // <pre>
         //   { JSON.stringify(fethchTodos.data, null, 2)}
         // </pre>
-        fethchTodos.data?.map((user: NewTodo & {id: number}) => (
-          <p key={ user.id}>{ user.title}</p>
+        fethchTodos.data?.map((todo: NewTodo & {id: number}) => (
+          <p key={todo.id}>{todo.title}</p>
         ))
       )}
     </>
