@@ -31,9 +31,9 @@ export default function App() {
       return res.data;
     },
     onSuccess: (newTodo) => {
-      // queryClient.setQueriesData(["todos"], (oldTodos: NewTodo[] & {id: number}) => { 
-      //   return [...oldTodos, newTodo];
-      // });
+      queryClient.setQueriesData(["todos"], (oldTodos: NewTodo[] & {id: number}) => { 
+        return [...oldTodos, newTodo];
+      });
     },
     onError: () => {
       console.log("error");
