@@ -27,6 +27,6 @@ export const useFetchPosts = (query: string) => {
     return useQuery({
         queryKey: ['posts', query],
         queryFn: () => fetchPosts(query),
-        keepPreviousData: true,
+        placeholderData: (prev) => prev,
     });
 };
