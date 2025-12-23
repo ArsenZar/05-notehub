@@ -11,7 +11,7 @@ export default function App() {
 
   const updateSearchQuery = useDebouncedCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value),
-    300
+    1000
   );
 
   return (
