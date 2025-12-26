@@ -13,7 +13,7 @@ export default async function fetchNotes(value: string): Promise<fetchNotesRespo
     const option = {
         params: {
             search: value,
-            tag: 'Todo',
+            // tag: 'Work',
             page: 1,
             perPage: 10,
             sortBy: 'created'
