@@ -1,28 +1,27 @@
 import axios from "axios";
-import type { Post } from "../types/note";
+import type { Note } from "../types/note";
 
-interface fetchNotesResponce{
-    notes: Post[]
+interface FetchNotesResponse{
+    notes: Note[],
+    totalPages: string
 }
 
 const myKey = import.meta.env.VITE_NOTEHUB_TOKEN;
 
-export default async function fetchNotes(value: string): Promise<fetchNotesResponce> {
-    console.log(myKey);
-    
+export async function fetchNotes(page: number, search?: string): Promise<FetchNotesResponse> {
+
     const option = {
         params: {
-            search: value,
-            page: 1,
-            perPage: 12,
-            sortBy: 'created'
+            search,
+            page,
+            perPage: 12
         },
         headers: {
             Authorization: `Bearer ${myKey}`
         }
     }
 
-    const res = await axios.get<fetchNotesResponce>('https://notehub-public.goit.study/api/notes', option);
+    const res = await axios.get<FetchNotesResponse>('https://notehub-public.goit.study/api/notes', option);
 
     return res.data;
 }
