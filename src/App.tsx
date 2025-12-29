@@ -1,7 +1,6 @@
-import { useState, type ReactElement } from "react";
+import { useState } from "react";
 import { fetchNotes } from "./services/noteService";
 import { useQuery } from "@tanstack/react-query";
-import type { Note } from "./types/note";
 import { useDebouncedCallback } from "use-debounce";
 
 export default function App() {
