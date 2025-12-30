@@ -2,6 +2,7 @@ import { useState } from "react";
 import { fetchNotes } from "./services/noteService";
 import { useQuery } from "@tanstack/react-query";
 import { useDebouncedCallback } from "use-debounce";
+import ReactPaginate from "react-paginate";
 
 export default function App() {
 
@@ -14,7 +15,10 @@ export default function App() {
     placeholderData: prev => prev
   });
 
-  const notes= data?.notes;
+  console.log(data);
+
+  const notes = data?.notes;
+  const totalPages = data?.totalPages ?? 0;
 
   const enterInput = useDebouncedCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value.trim();
@@ -30,14 +34,16 @@ export default function App() {
   return (
     <>
       <input type="text" name="query" defaultValue={search} onChange={enterInput}/>
-    {isLoading || isFetching && <p>Loading...</p>}
-    {isError && <p>Error...</p>}
+    {(isLoading || isFetching) && <p>Loading...</p>}
+      {isError && <p>Error...</p>}
+      
     <ul>
       { 
         notes?.map((note) => (
           <li key={note.id}>
             <h2>{note.title}</h2>
             <p>{note.content}</p>
+            <span>{ note.tag }</span>
           </li>
         ))
       }
