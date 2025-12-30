@@ -36,7 +36,14 @@ export default function App() {
       <input type="text" name="query" defaultValue={search} onChange={enterInput}/>
     {(isLoading || isFetching) && <p>Loading...</p>}
       {isError && <p>Error...</p>}
-      
+      {<ReactPaginate
+        pageCount={totalPages}
+        onPageChange={({ selected }) => setPage(selected + 1)}
+        forcePage={page - 1}
+        nextLabel="→"
+        previousLabel="←"
+
+      />}
     <ul>
       { 
         notes?.map((note) => (
