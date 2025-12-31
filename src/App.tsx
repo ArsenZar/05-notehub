@@ -3,11 +3,20 @@ import { fetchNotes } from "./services/noteService";
 import { useQuery } from "@tanstack/react-query";
 import { useDebouncedCallback } from "use-debounce";
 import ReactPaginate from "react-paginate";
+import Modal from "./components/Modal/Modal";
 
 export default function App() {
 
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState<string | undefined>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => { 
+    setIsModalOpen(true);
+  }
+  const closeModal = () => {
+    setIsModalOpen(false);
+  }
 
   const { data, isLoading, isFetching, isError } = useQuery({
     queryKey: ["notes", page, search],
@@ -33,7 +42,8 @@ export default function App() {
 
   return (
     <>
-      <input type="text" name="query" defaultValue={search} onChange={enterInput}/>
+      <input type="text" name="query" defaultValue={search} onChange={enterInput} />
+      <button onClick={openModal}>Create note +</button>
     {(isLoading || isFetching) && <p>Loading...</p>}
       {isError && <p>Error...</p>}
       {<ReactPaginate
@@ -55,6 +65,8 @@ export default function App() {
         ))
       }
       </ul>
+
+      {isModalOpen && <Modal onClose={closeModal} />}
     </>
   );
 }
