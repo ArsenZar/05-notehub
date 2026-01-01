@@ -71,5 +71,3 @@ export default function App() {
   );
 }
 
-// Happy new year
-// bye bye fu*king 2025
