@@ -4,3 +4,9 @@ export interface Note{
     content: string,
     tag: string
 }
+
+export interface CreateNoteDto {
+    title: string;
+    content: string;
+    tag: string;
+}

@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Note } from "../types/note";
+import type { Note, CreateNoteDto } from "../types/note";
 
 interface FetchNotesResponse{
     notes: Note[];
@@ -7,6 +7,8 @@ interface FetchNotesResponse{
 }
 
 const myKey = import.meta.env.VITE_NOTEHUB_TOKEN;
+
+
 
 export async function fetchNotes(page: number, search?: string): Promise<FetchNotesResponse> {
 
