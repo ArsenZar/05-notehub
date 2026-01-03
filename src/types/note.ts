@@ -5,7 +5,7 @@ export interface Note{
     tag: string
 }
 
-export interface CreateNoteDto {
+export interface CreateNote {
     title: string;
     content: string;
     tag: string;

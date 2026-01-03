@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Note, CreateNoteDto } from "../types/note";
+import type { Note, CreateNote } from "../types/note";
 
 interface FetchNotesResponse{
     notes: Note[];
@@ -8,10 +8,24 @@ interface FetchNotesResponse{
 
 const myKey = import.meta.env.VITE_NOTEHUB_TOKEN;
 
-export const createNote = async (note: CreateNoteDto): Promise<Note> => {
+export const createNote = async (note: CreateNote): Promise<Note> => {
     const res = await axios.post<Note>(
         "https://notehub-public.goit.study/api/notes",
         note,
+        {
+            headers: {
+                Authorization: `Bearer ${myKey}`,
+            },
+        }
+    );
+
+    return res.data;
+};
+
+export const deleteNote = async (noteId: Note["id"]): Promise<Note> => {
+    const res = await axios.delete<Note>(
+        `https://notehub-public.goit.study/api/notes/${noteId}`,
+
         {
             headers: {
                 Authorization: `Bearer ${myKey}`,

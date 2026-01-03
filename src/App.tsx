@@ -60,11 +60,13 @@ export default function App() {
           <li key={note.id}>
             <h2>{note.title}</h2>
             <p>{note.content}</p>
-            <span>{ note.tag }</span>
+            <span>{note.tag}</span>
+            <button>Delete</button>
           </li>
         ))
       }
       </ul>
+      
 
       {isModalOpen && <Modal onClose={closeModal} />}
     </>
