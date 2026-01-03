@@ -17,7 +17,7 @@ export default function Modal({ onClose }: ModalProps) {
     return createPortal(
         <div className={css.backdrop} role="dialog" aria-modal="true" onClick={closeClick}>
             <div className={ css.modal}>
-                <NoteForm />
+                <NoteForm onClose={onClose}/>
             </div>
         </div>,
     document.body
