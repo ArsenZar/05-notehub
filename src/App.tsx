@@ -4,6 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useDebouncedCallback } from "use-debounce";
 import ReactPaginate from "react-paginate";
 import Modal from "./components/Modal/Modal";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteNote } from "./services/noteService";
 
 export default function App() {
 
@@ -24,7 +26,14 @@ export default function App() {
     placeholderData: prev => prev
   });
 
-  console.log(data);
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+      mutationFn: deleteNote,
+      onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["notes"] });
+      },
+  });
 
   const notes = data?.notes;
   const totalPages = data?.totalPages ?? 0;
@@ -61,7 +70,7 @@ export default function App() {
             <h2>{note.title}</h2>
             <p>{note.content}</p>
             <span>{note.tag}</span>
-            <button>Delete</button>
+            <button onClick={() => mutation.mutate(note.id)}>Delete</button>
           </li>
         ))
       }
