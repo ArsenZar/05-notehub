@@ -4,8 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useDebouncedCallback } from "use-debounce";
 import ReactPaginate from "react-paginate";
 import Modal from "./components/Modal/Modal";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteNote } from "./services/noteService";
+import css from "./App.module.css";
+import SearchBox from "./components/SearchBox/SearchBox";
+import NoteList from "./components/NoteList/NoteList";
 
 export default function App() {
 
@@ -26,15 +27,6 @@ export default function App() {
     placeholderData: prev => prev
   });
 
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-      mutationFn: deleteNote,
-      onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ["notes"] });
-      },
-  });
-
   const notes = data?.notes;
   const totalPages = data?.totalPages ?? 0;
 
@@ -51,31 +43,25 @@ export default function App() {
 
   return (
     <>
-      <input type="text" name="query" defaultValue={search} onChange={enterInput} />
-      <button onClick={openModal}>Create note +</button>
-    {(isLoading || isFetching) && <p>Loading...</p>}
-      {isError && <p>Error...</p>}
-      {<ReactPaginate
-        pageCount={totalPages}
-        onPageChange={({ selected }) => setPage(selected + 1)}
-        forcePage={page - 1}
-        nextLabel="→"
-        previousLabel="←"
-
-      />}
-    <ul>
-      { 
-        notes?.map((note) => (
-          <li key={note.id}>
-            <h2>{note.title}</h2>
-            <p>{note.content}</p>
-            <span>{note.tag}</span>
-            <button onClick={() => mutation.mutate(note.id)}>Delete</button>
-          </li>
-        ))
-      }
-      </ul>
+      <div className={css.app}>
+        <header className={css.toolbar}>
+          <SearchBox value={ search } onChange={ enterInput }/>
+          {/* <input type="text" name="query" defaultValue={search} onChange={enterInput} /> */}
+          {(isLoading || isFetching) && <p>Loading...</p>}
+          {isError && <p>Error...</p>}
+          {<ReactPaginate
+            className={css.toolbar} 
+            pageCount={totalPages}
+            onPageChange={({ selected }) => setPage(selected + 1)}
+            forcePage={page - 1}
+            nextLabel="→"
+            previousLabel="←"
+          />}
+          <button className={ css.button } onClick={openModal}>Create note +</button>
+        </header>
+      </div>
       
+      <NoteList notes={ notes } />
 
       {isModalOpen && <Modal onClose={closeModal} />}
     </>
