@@ -5,6 +5,8 @@
     padding: 0;
     margin: 0;
     list-style: none;
+    max-width: 1280px;
+    margin: 0 auto;
 }
 
 .listItem {
