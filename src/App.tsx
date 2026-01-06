@@ -2,11 +2,11 @@ import { useState } from "react";
 import { fetchNotes } from "./services/noteService";
 import { useQuery } from "@tanstack/react-query";
 import { useDebouncedCallback } from "use-debounce";
-import ReactPaginate from "react-paginate";
 import Modal from "./components/Modal/Modal";
 import css from "./App.module.css";
 import SearchBox from "./components/SearchBox/SearchBox";
 import NoteList from "./components/NoteList/NoteList";
+import Pagination from "./components/Pagination/Pagination";
 
 export default function App() {
 
@@ -39,27 +39,20 @@ export default function App() {
       setSearch(undefined);
       setPage(1);
     }
-  }, 1000);
+  }, 300);
 
   return (
     <>
       <div className={css.app}>
         <header className={css.toolbar}>
           <SearchBox value={ search } onChange={ enterInput }/>
-          {/* <input type="text" name="query" defaultValue={search} onChange={enterInput} /> */}
-          {(isLoading || isFetching) && <p>Loading...</p>}
-          {isError && <p>Error...</p>}
-          {<ReactPaginate
-            className={css.toolbar} 
-            pageCount={totalPages}
-            onPageChange={({ selected }) => setPage(selected + 1)}
-            forcePage={page - 1}
-            nextLabel="→"
-            previousLabel="←"
-          />}
+          {totalPages > 1 && <Pagination totalPages={totalPages} page={page} setPage={setPage} />}
           <button className={ css.button } onClick={openModal}>Create note +</button>
         </header>
       </div>
+
+      {(isLoading || isFetching) && <p className={ css.loading }>Loading...</p>}
+      {isError && <p>Error...</p>}
       
       <NoteList notes={ notes } />
 
