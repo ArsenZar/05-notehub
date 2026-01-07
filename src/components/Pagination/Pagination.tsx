@@ -15,7 +15,7 @@ export default function Pagination({ totalPages, page, setPage }: PaginationProp
             pageCount={totalPages}
             onPageChange={({ selected }) => setPage(selected + 1)}
             forcePage={page - 1}
-            activeClassName={css.active}
+            activeClassName={css.selected}
             nextLabel="→"
             previousLabel="←"
         />
