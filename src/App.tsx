@@ -12,6 +12,7 @@ export default function App() {
 
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState<string | undefined>();
+  const [input, setInput] = useState<string | undefined>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => { 
@@ -30,22 +31,16 @@ export default function App() {
   const notes = data?.notes;
   const totalPages = data?.totalPages ?? 0;
 
-  const enterInput = useDebouncedCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const query = e.target.value.trim();
-    if (query !== "") {
-      setSearch(query);
-      setPage(1);
-    } else {
-      setSearch(undefined);
-      setPage(1);
-    }
+  const enterInput = useDebouncedCallback((value: string) => {
+    setSearch(value.trim() || undefined);
+    setPage(1);
   }, 300);
 
   return (
     <>
       <div className={css.app}>
         <header className={css.toolbar}>
-          <SearchBox value={ search } onChange={ enterInput }/>
+          <SearchBox value={input} enterInput={ enterInput } setInput={setInput} />
           {totalPages > 1 && <Pagination totalPages={totalPages} page={page} setPage={setPage} />}
           <button className={ css.button } onClick={openModal}>Create note +</button>
         </header>
