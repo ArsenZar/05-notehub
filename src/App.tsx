@@ -27,7 +27,8 @@ export default function App() {
     queryFn: () => fetchNotes(page, search),
     placeholderData: prev => prev,
     refetchInterval: 3000,
-    refetchOnWindowFocus: true
+    refetchOnWindowFocus: true,
+    refetchIntervalInBackground: true
   });
 
   const notes = data?.notes;
