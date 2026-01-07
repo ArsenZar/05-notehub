@@ -54,7 +54,7 @@ export default function App() {
       {(isLoading || isFetching) && <p className={ css.loading }>Loading...</p>}
       {isError && <p>Error...</p>}
       
-      <NoteList notes={ notes } />
+      {notes && notes?.length > 0 && <NoteList notes={notes} />}
 
       {isModalOpen && <Modal onClose={closeModal} />}
     </>

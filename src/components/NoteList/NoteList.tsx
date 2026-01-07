@@ -10,7 +10,7 @@ interface NoteListProps {
 }
 
 export default function NoteList({ notes }: NoteListProps) {
-
+    
     const [deletedId, setDeletedId] = useState<string | null>(null);
 
       const queryClient = useQueryClient();
