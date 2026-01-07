@@ -5,7 +5,7 @@ import css from "./NoteList.module.css";
 import { useState } from "react";
 
 interface NoteListProps {
-    notes: Note[] | undefined;
+    notes: Note[];
     deletedId?: string;
 }
 
