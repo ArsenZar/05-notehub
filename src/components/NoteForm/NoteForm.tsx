@@ -6,9 +6,10 @@ import { createNote } from "../../services/noteService";
 
 interface NoteFormProps {
     onClose: () => void;
+    setPage: (num: number) => void;
 }
 
-export default function NoteForm({ onClose }: NoteFormProps) {
+export default function NoteForm({ onClose, setPage }: NoteFormProps) {
 
     const queryClient = useQueryClient();
 
@@ -17,6 +18,7 @@ export default function NoteForm({ onClose }: NoteFormProps) {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["notes"] });
             onClose();
+            setPage(1);
         },
     });
 

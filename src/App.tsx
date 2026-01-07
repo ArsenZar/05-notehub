@@ -56,7 +56,7 @@ export default function App() {
       
       {notes && notes?.length > 0 && <NoteList notes={notes} />}
 
-      {isModalOpen && <Modal onClose={closeModal} />}
+      {isModalOpen && <Modal onClose={closeModal} setPage={setPage} />}
     </>
   );
 }
