@@ -39,8 +39,8 @@
     background: #000;
     color: #fff;
 }
-.selected {
-    background-color: #0d6efd;
+li.selected {
+    background-color: #0d6efd !important;
     border-color: #0d6efd;
 }
 
