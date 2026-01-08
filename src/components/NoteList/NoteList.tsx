@@ -6,10 +6,10 @@ import { useState } from "react";
 
 interface NoteListProps {
     notes: Note[];
-    deletedId?: string;
+    openModal: () => void;
 }
 
-export default function NoteList({ notes }: NoteListProps) {
+export default function NoteList({ notes, openModal }: NoteListProps) {
     
     const [deletedId, setDeletedId] = useState<string | null>(null);
 
@@ -22,17 +22,22 @@ export default function NoteList({ notes }: NoteListProps) {
               setDeletedId(null);
           },
       });
+    
+    const editModal = () => {
+        openModal();
+     }; 
 
     return (
         <ul className={css.list}>
             {
                 notes?.map((note) => (
-                    <li className={css.listItem} key={note.id}>
+                    <li onClick={editModal} className={css.listItem} key={note.id}>
                         <h2 className={css.title}>{note.title}</h2>
                         <p className={css.content}>{note.content}</p>
                         <div className={css.footer}>
                             <span className={css.tag}>{note.tag}</span>
-                            <button className={css.button} onClick={() => {
+                            <button className={css.button} onClick={(e) => {
+                                e.stopPropagation();
                                 setDeletedId(note.id);
                                 mutation.mutate(note.id);
                             }}
