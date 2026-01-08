@@ -48,3 +48,13 @@
     color: #fff !important;
     font-weight: 500;
 }
+
+.pagination :global(li.selected > a) {
+    background-color: #0d6efd;
+    color: #fff;
+    border-color: #0d6efd;
+}
+
+.pagination :global(li.selected:hover > a) {
+    background-color: #0b5ed7;
+}
