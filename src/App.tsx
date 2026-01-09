@@ -7,6 +7,7 @@ import css from "./App.module.css";
 import SearchBox from "./components/SearchBox/SearchBox";
 import NoteList from "./components/NoteList/NoteList";
 import Pagination from "./components/Pagination/Pagination";
+import type { Note } from "./types/note";
 
 export default function App() {
 
@@ -14,12 +15,20 @@ export default function App() {
   const [search, setSearch] = useState<string | undefined>();
   const [input, setInput] = useState<string | undefined>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingNote, setEditingNote] = useState<Note | null>(null);
 
   const openModal = () => { 
-    setIsModalOpen(true);
+    if (editingNote === null) {
+      setIsModalOpen(true);
+    } else {
+      setIsModalOpen(true);
+      setEditingNote(null);
+    }
+    
   }
   const closeModal = () => {
     setIsModalOpen(false);
+    setEditingNote(null);
   }
 
   const { data, isLoading, isFetching, isError } = useQuery({
@@ -52,9 +61,9 @@ export default function App() {
       {(isLoading || isFetching) && <p className={ css.loading }>Loading...</p>}
       {isError && <p>Error...</p>}
       
-      {notes && notes?.length > 0 && <NoteList notes={notes} openModal={openModal} />}
+      {notes && notes?.length > 0 && <NoteList notes={notes} openModal={openModal} setEditingNote={setEditingNote } />}
 
-      {isModalOpen && <Modal onClose={closeModal} setPage={setPage} />}
+      {isModalOpen && <Modal onClose={closeModal} setPage={setPage} editingNote={editingNote} />}
     </>
   );
 }

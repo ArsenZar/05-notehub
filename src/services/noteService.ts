@@ -8,6 +8,24 @@ interface FetchNotesResponse{
 
 const myKey = import.meta.env.VITE_NOTEHUB_TOKEN;
 
+export const editNote = async ({ id, title, content, tag }: Note): Promise<Note> => {
+    const res = await axios.patch<Note>(
+        `https://notehub-public.goit.study/api/notes/${id}`,
+        {
+            title: title,
+            content: content,
+            tag: tag
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${myKey}`,
+            },
+        }
+    );
+
+    return res.data;
+};
+
 export const createNote = async (note: CreateNote): Promise<Note> => {
     const res = await axios.post<Note>(
         "https://notehub-public.goit.study/api/notes",

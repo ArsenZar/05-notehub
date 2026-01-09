@@ -7,9 +7,10 @@ import { useState } from "react";
 interface NoteListProps {
     notes: Note[];
     openModal: () => void;
+    setEditingNote: (note: Note) => void;
 }
 
-export default function NoteList({ notes, openModal }: NoteListProps) {
+export default function NoteList({ notes, openModal, setEditingNote }: NoteListProps) {
     
     const [deletedId, setDeletedId] = useState<string | null>(null);
 
@@ -23,15 +24,16 @@ export default function NoteList({ notes, openModal }: NoteListProps) {
           },
       });
     
-    const editModal = () => {
+    const editModal = (note: Note) => {
         openModal();
+        setEditingNote(note);
      }; 
 
     return (
         <ul className={css.list}>
             {
                 notes?.map((note) => (
-                    <li onClick={editModal} className={css.listItem} key={note.id}>
+                    <li onClick={() => { editModal(note) }} className={css.listItem} key={note.id}>
                         <h2 className={css.title}>{note.title}</h2>
                         <p className={css.content}>{note.content}</p>
                         <div className={css.footer}>

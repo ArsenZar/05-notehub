@@ -2,23 +2,38 @@ import css from "./NoteForm.module.css";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from 'yup';
 import { useMutation, useQueryClient } from "@tanstack/react-query"; 
-import { createNote } from "../../services/noteService";
+import { createNote, editNote } from "../../services/noteService";
+import type { Note } from "../../types/note";
+import { useEffect } from "react";
 
 interface NoteFormProps {
     onClose: () => void;
     setPage: (num: number) => void;
+    editingNote?: Note;
 }
 
-export default function NoteForm({ onClose, setPage }: NoteFormProps) {
+export default function NoteForm({ onClose, setPage, editingNote }: NoteFormProps) {
+
+    useEffect(() => {
+        console.log(editingNote);
+    }, [editingNote]);
 
     const queryClient = useQueryClient();
 
-    const mutation = useMutation({
+    const mutationCreate = useMutation({
         mutationFn: createNote,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["notes"] });
             onClose();
             setPage(1);
+        },
+    });
+
+    const mutationEdit = useMutation({
+        mutationFn: editNote,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["notes"] });
+            onClose();
         },
     });
 
@@ -40,12 +55,19 @@ export default function NoteForm({ onClose, setPage }: NoteFormProps) {
 
     return (
         <Formik
-            initialValues={{ title: "", content: "", tag: "Todo" }}
+            initialValues={{ title: editingNote?.title || "", content: editingNote?.content || "", tag: editingNote?.tag || "Todo"}}
             validationSchema={NoteSchema}
-            onSubmit={(values, actions) => {
-                mutation.mutate(values);
+            onSubmit={
+                (values, actions) => {
+                    if (editingNote) {
+                        mutationEdit.mutate({ id: editingNote.id, ...values });
+                    } else {
+                        mutationCreate.mutate(values);
+                    }
+                
                 actions.resetForm();
-            }}
+                }
+            }
         >
             <Form className = { css.form } >
                 <div className={css.formGroup}>
@@ -96,9 +118,9 @@ export default function NoteForm({ onClose, setPage }: NoteFormProps) {
                     <button
                         type="submit"
                         className={css.submitButton}
-                        disabled={mutation.isPending}
+                        disabled={mutationCreate.isPending}
                     >
-                        {mutation.isPending ? "Creating..." : "Create note"}
+                        {mutationCreate.isPending ? "Creating..." : ( editingNote ? "Save changes" : "Create note" )}
                     </button>
 
                 </div>
