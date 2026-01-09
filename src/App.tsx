@@ -15,20 +15,20 @@ export default function App() {
   const [search, setSearch] = useState<string | undefined>();
   const [input, setInput] = useState<string | undefined>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingNote, setEditingNote] = useState<Note | null>(null);
+  const [editingNote, setEditingNote] = useState<Note | undefined>(undefined);
 
   const openModal = () => { 
     if (editingNote === null) {
       setIsModalOpen(true);
     } else {
       setIsModalOpen(true);
-      setEditingNote(null);
+      setEditingNote(undefined);
     }
     
   }
   const closeModal = () => {
     setIsModalOpen(false);
-    setEditingNote(null);
+    setEditingNote(undefined);
   }
 
   const { data, isLoading, isFetching, isError } = useQuery({
