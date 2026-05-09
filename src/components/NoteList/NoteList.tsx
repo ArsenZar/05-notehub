@@ -14,15 +14,15 @@ export default function NoteList({ notes, openModal, setEditingNote }: NoteListP
     
     const [deletedId, setDeletedId] = useState<string | null>(null);
 
-      const queryClient = useQueryClient();
-    
-      const mutation = useMutation({
-          mutationFn: deleteNote,
-          onSuccess: () => {
-              queryClient.invalidateQueries({ queryKey: ["notes"] });
-              setDeletedId(null);
-          },
-      });
+    const queryClient = useQueryClient();
+
+    const mutation = useMutation({
+        mutationFn: deleteNote,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["notes"] });
+            setDeletedId(null);
+        },
+    });
     
     const editModal = (note: Note) => {
         openModal();
